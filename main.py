@@ -4,16 +4,18 @@ from dotenv import load_dotenv
 from crewai import LLM, Agent, Crew, Task
 from models.StructuredOuput import StructuredOutput
 from models.agents import ContentAgents
+import functions_framework
 
 load_dotenv()
 
-def lambda_handler(event, context):
+@functions_framework.http
+def functio_handler(request):
     llm = LLM(
     model="gemini/gemini-2.0-flash",
     temperature=0.2)
 
-    body = json.loads(event['body'])
-    original_content = body['content']
+    print(request)
+    original_content = "Esse é um teste"
     
     content_structurator = ContentAgents()
     agent = content_structurator.obter_agente(llm)
