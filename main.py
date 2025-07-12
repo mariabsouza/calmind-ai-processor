@@ -2,6 +2,7 @@
 import json
 from dotenv import load_dotenv
 from crewai import LLM, Agent, Crew, Task
+from flask import jsonify
 from models.StructuredOuput import StructuredOutput
 from models.agents import ContentAgents
 import functions_framework
@@ -14,8 +15,8 @@ def function_handler(request):
     model="gemini/gemini-2.0-flash",
     temperature=0.2)
 
-    print(request)
-    original_content = "Esse é um teste"
+    data = request.get_json(silent=True)
+    original_content = data.get("content", "Texto padrão se não vier nada para testes")
     
     content_structurator = ContentAgents()
     agent = content_structurator.obter_agente(llm)
@@ -39,4 +40,4 @@ def function_handler(request):
 
     resultados = crew.kickoff()
 
-    return resultados
+    return jsonify(resultados.model_dump())
