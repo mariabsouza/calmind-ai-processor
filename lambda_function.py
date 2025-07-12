@@ -37,4 +37,4 @@ def lambda_handler(event, context):
 
     resultados = crew.kickoff()
 
-    print(resultados)
+    return resultados
