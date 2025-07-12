@@ -9,7 +9,7 @@ import functions_framework
 load_dotenv()
 
 @functions_framework.http
-def functio_handler(request):
+def function_handler(request):
     llm = LLM(
     model="gemini/gemini-2.0-flash",
     temperature=0.2)
