@@ -63,4 +63,6 @@ def function_handler(request):
 
     response_json = optimized_content.model_dump()  # Converte o objeto Pydantic para dicionário
 
-    return jsonify(response_json)
+    headers = {"Access-Control-Allow-Origin": "*"}
+
+    return (jsonify(response_json), 200, headers)
