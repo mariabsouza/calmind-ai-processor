@@ -18,7 +18,8 @@ def function_handler(request):
         response_schema=StructuredOutput,
         thinking_config = types.ThinkingConfig(
             thinking_budget=0,
-        ))
+        ),
+        response_mime_type="application/json"),
 
     client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
@@ -28,17 +29,5 @@ def function_handler(request):
         config=generate_content_config
         
     )
-
-    content = {
-        "content_title": response.content_title,
-        "subtitle_content": response.subtitle_content,
-        "separate_content": [
-            {
-                "chunk_subtitle": chunk.chunk_subtitle,
-                "chunk_content": chunk.chunk_content
-            }
-            for chunk in response.separate_content
-        ]
-    }
-
-    return jsonify(content)
+    
+    return jsonify(response.text)
