@@ -2,6 +2,7 @@ import asyncio
 import os
 import re
 import time
+from dotenv import load_dotenv
 from flask import jsonify
 import json
 import functions_framework
@@ -9,12 +10,13 @@ from google import genai
 from helpers.api_utils import cors_headers, format_output, get_original_content
 from agents.parser_agent import ParserAgent
 from agents.rewriter_agent import RewriterAgent
+from models.StructuredOuput import OriginalChunkContent, StructuredOutput
 
 client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
-async def process_chunk_async(chunk_dict):
+async def process_chunk_async(chunk: OriginalChunkContent):
 
-    rewriter_agent = RewriterAgent(chunk_dict["chunk_content"])
+    rewriter_agent = RewriterAgent(chunk.chunk_content)
 
     response = await asyncio.to_thread(
         lambda: client.models.generate_content(
@@ -30,12 +32,11 @@ async def process_chunk_async(chunk_dict):
 def function_handler(request):
     if request.method == 'OPTIONS':
         return ('', 204, cors_headers())
-    
+
     original_content = get_original_content(request)
 
     tasks = []
     buffer = ""
-    already_seen_chunks = set()
 
     parser_agent = ParserAgent(original_content)
 
@@ -49,33 +50,17 @@ def function_handler(request):
 
         buffer += chunk.text
 
-        if '"original_chunks":[' in buffer:
-            for match in get_chunks_matches(buffer):
-                chunk_str = match.group()
-                try:
-                    chunk_dict = json.loads(chunk_str)
+    data = json.loads(buffer)
+    parser_response = StructuredOutput(**data)
 
-                    chunk_id = chunk_dict.get("chunk_title") + chunk_dict.get("chunk_content")[:10]
-                    if chunk_id in already_seen_chunks:
-                        continue
-
-                    already_seen_chunks.add(chunk_id)
-                    tasks.append(process_chunk_async(chunk_dict))
-
-                except Exception as e:
-                    print("Erro ao parsear objeto:", e)
+    for chunk in parser_response.original_chunks:
+        tasks.append(process_chunk_async(chunk))
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     rewritten_chunks = loop.run_until_complete(asyncio.gather(*tasks))
 
-    response_json = format_output(buffer, rewritten_chunks)
+    response_json = format_output(parser_response, rewritten_chunks)
     headers = {"Access-Control-Allow-Origin": "*"}
+
     return (jsonify(response_json), 200, headers)
-
-def get_chunks_matches(buffer):
-    array_start = buffer.find('"original_chunks":[') + len('"original_chunks":[')
-    array_content = buffer[array_start:]
-
-    chunk_object_regex = re.compile(r'\{[^{}]+\}(?=,|\])')
-    return chunk_object_regex.finditer(array_content)

@@ -12,10 +12,7 @@ def cors_headers():
             'Access-Control-Max-Age': '3600'
         }
 
-def format_output(buffer, rewritten_chunks):
-    data = json.loads(buffer)
-    parser_response = StructuredOutput(**data)
-
+def format_output(parser_response : StructuredOutput, rewritten_chunks):
     optimized_content = OptimizedContent(
         content_title=parser_response.content_title,
         content_subtitle=parser_response.content_subtitle,
