@@ -1,7 +1,12 @@
+from typing import List, Optional
 from pydantic import BaseModel, Field
+
+class ChunkContent(BaseModel):
+    chunk_title: Optional[str]
+    chunk_content: str
 
 
 class StructuredOutput(BaseModel):
-    titulo: str = Field(..., description="Content title")
-    subtitulo: str = Field(..., description="Content subtitle")
-    conteudo: str = Field(..., description="Content")
+    content_title: str = Field(..., description="Content title")
+    content_subtitle: Optional[str] = Field(..., description="Content subtitle")
+    chunks: List[ChunkContent] = Field(..., description="Content")
