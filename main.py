@@ -1,6 +1,7 @@
 import os
 import time
 from flask import jsonify
+import json
 import functions_framework
 from google.genai import types
 from google import genai
@@ -30,4 +31,6 @@ def function_handler(request):
         
     )
     
-    return jsonify(response.text)
+    response_json = json.loads(response.text)
+    
+    return jsonify(response_json)
