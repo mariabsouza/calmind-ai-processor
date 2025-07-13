@@ -11,6 +11,14 @@ from prompts.rewriter_agent import rewriter_agent_prompt
 
 @functions_framework.http
 def function_handler(request):
+    if request.method == 'OPTIONS':
+        headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '3600'
+        }
+        return ('', 204, headers)
     
     data = request.get_json(silent=True)
     original_content = data.get("content", "Texto padrão se não vier nada para testes")
