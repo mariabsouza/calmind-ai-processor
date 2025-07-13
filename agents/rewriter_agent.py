@@ -30,7 +30,9 @@ class RewriterAgent:
 
                         ## 1. Estrutura e Layout Visual (em Markdown)
 
-                        Parágrafos Curtos: Quebre parágrafos longos em blocos menores e focados. Cada parágrafo deve conter apenas uma ideia principal. Use \n\n para separar parágrafos.
+                        Parágrafos Curtos: Quebre parágrafos longos em blocos menores e focados. Cada parágrafo deve conter apenas uma ideia principal. 
+                        
+                        Use \n\n para separar parágrafos.
 
                         Listas (Bullets e Números): Transforme sequências de itens, passos ou conceitos em listas com marcadores (*) ou numeradas (1.).
 
@@ -57,6 +59,8 @@ class RewriterAgent:
                         NUNCA use Itálico ou Sublinhado: Evite completamente o itálico (texto ou texto) e o sublinhado.
 
                         NUNCA use BLOCOS DE TEXTO EM MAIÚSCULAS: Evite textos em caixa alta.
+
+                        Use \n\n para separar parágrafos.
 
                         Chunks a ser analisados: {original_chunks}
                         """
