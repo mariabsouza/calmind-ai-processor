@@ -29,4 +29,4 @@ def get_original_content(request):
     data = request.get_json(silent=True)
     original_content = data.get("content")
     title = data.get("title") 
-    return f"{f'Título: {title} - ' if title else 'Defina um título para o conteúdo'}Conteúdo: {original_content}"
+    return f"Título: {title} - Conteúdo: {original_content}"
