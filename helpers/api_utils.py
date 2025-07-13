@@ -15,7 +15,6 @@ def cors_headers():
 def format_output(parser_response : StructuredOutput, rewritten_chunks):
     optimized_content = OptimizedContent(
         content_title=parser_response.content_title,
-        content_subtitle=parser_response.content_subtitle,
         original_chunks=parser_response.original_chunks, 
         replaced_chunks=rewritten_chunks   
     )
@@ -26,4 +25,5 @@ def get_original_content(request):
     data = request.get_json(silent=True)
     original_content = data.get("content")
     title = data.get("title") 
-    return f"Título: {title} - Conteúdo: {original_content}"
+    needs=data.get("dificultties")
+    return f"Título: {title} - Conteúdo: {original_content}", needs

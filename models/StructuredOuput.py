@@ -8,5 +8,4 @@ class OriginalChunkContent(BaseModel):
 
 class StructuredOutput(BaseModel):
     content_title: str = Field(..., description="Content title")
-    content_subtitle: Optional[str] = Field(..., description="Content subtitle")
     original_chunks: List[OriginalChunkContent] = Field(..., description="Content")

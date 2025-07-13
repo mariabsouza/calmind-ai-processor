@@ -10,6 +10,5 @@ class OptimizedChunkContent(BaseModel):
 
 class OptimizedContent(BaseModel):
     content_title: str = Field(..., description="Content title")
-    content_subtitle: Optional[str] = Field(..., description="Content subtitle")
     original_chunks: list[OriginalChunkContent] = Field(..., description="Original Content")
     replaced_chunks: list[OptimizedChunkContent] = Field(..., description="Replaced Content")

@@ -14,9 +14,9 @@ from models.StructuredOuput import OriginalChunkContent, StructuredOutput
 
 client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
-async def process_chunk_async(chunk: OriginalChunkContent):
+async def process_chunk_async(chunk: OriginalChunkContent, needs):
 
-    rewriter_agent = RewriterAgent(chunk.chunk_content)
+    rewriter_agent = RewriterAgent(chunk.chunk_content, needs)
 
     response = await asyncio.to_thread(
         lambda: client.models.generate_content(
@@ -33,7 +33,7 @@ def function_handler(request):
     if request.method == 'OPTIONS':
         return ('', 204, cors_headers())
 
-    original_content = get_original_content(request)
+    original_content, needs = get_original_content(request)
 
     tasks = []
     buffer = ""
@@ -54,7 +54,7 @@ def function_handler(request):
     parser_response = StructuredOutput(**data)
 
     for chunk in parser_response.original_chunks:
-        tasks.append(process_chunk_async(chunk))
+        tasks.append(process_chunk_async(chunk, needs))
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
