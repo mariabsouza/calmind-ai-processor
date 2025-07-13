@@ -29,5 +29,16 @@ def function_handler(request):
         
     )
 
-    return jsonify(response.text) 
+    content = {
+        "content_title": response.content_title,
+        "subtitle_content": response.subtitle_content,
+        "separate_content": [
+            {
+                "chunk_subtitle": chunk.chunk_subtitle,
+                "chunk_content": chunk.chunk_content
+            }
+            for chunk in response.separate_content
+        ]
+    }
 
+    return jsonify(content)
