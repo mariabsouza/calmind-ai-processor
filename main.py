@@ -19,7 +19,7 @@ def function_handler(request):
         thinking_config = types.ThinkingConfig(
             thinking_budget=0,
         ),
-        response_mime_type="application/json"),
+        response_mime_type="application/json")
 
     client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
