@@ -24,3 +24,9 @@ def format_output(buffer, rewritten_chunks):
     )
 
     return optimized_content.model_dump()
+
+def get_original_content(request):
+    data = request.get_json(silent=True)
+    original_content = data.get("content")
+    title = data.get("title") 
+    original_content = f"{f'Título: {title} - ' if title else 'Defina um título para o conteúdo'}Conteúdo: {original_content}"

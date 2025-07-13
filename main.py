@@ -6,9 +6,7 @@ from flask import jsonify
 import json
 import functions_framework
 from google import genai
-from helpers.api_utils import cors_headers, format_output
-from models.FinalOutput import OptimizedContent
-from models.StructuredOuput import StructuredOutput
+from helpers.api_utils import cors_headers, format_output, get_original_content
 from agents.parser_agent import ParserAgent
 from agents.rewriter_agent import RewriterAgent
 
@@ -33,9 +31,8 @@ def function_handler(request):
     if request.method == 'OPTIONS':
         return ('', 204, cors_headers())
     
-    data = request.get_json(silent=True)
-    original_content = data.get("content")
-    
+    original_content = get_original_content(request)
+
     tasks = []
     buffer = ""
     already_seen_chunks = set()
